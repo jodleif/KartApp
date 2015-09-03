@@ -8,11 +8,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
+import javax.xml.transform.sax.SAXSource;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,18 @@ public class KartApp extends Application
 				fjernSirkler(root);
 				tegnSirkler(root);
 			});
+			iv.setOnScroll((ScrollEvent e) -> {
+				fjernSirkler(root);
+				opprettSirkler();
+				tegnSirkler(root);
+			});
 		}
+		// Dummy søke aktivasjon - med knappen S / s
+		scene.setOnKeyPressed((KeyEvent e) -> {
+			if (e.getCode().equals(KeyCode.S)) {
+				System.out.println("Søke!");
+			}
+		});
 		opprettSirkler(); // Tegne sirkler OVER bildet.
 		tegnSirkler(root);
 		primaryStage.show();
