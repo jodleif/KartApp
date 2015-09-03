@@ -1,9 +1,9 @@
 package no.hit.kart;
 
 /**
- * Created by Jo Øivind Gjernes on 03.09.2015.
+ * Created by Jo Ã˜ivind Gjernes on 03.09.2015.
  * <p>
- * Klasse punkt - skal samsvare til et punkt på kartet
+ * Klasse punkt - skal samsvare til et punkt pÃ¥ kartet
  */
 public class Punkt
 {
@@ -11,16 +11,33 @@ public class Punkt
 
 	private int y;
 
-	public Punkt(int x_pos, int y_pos)
+	public Punkt(int xPos, int yPos)
 	{
-		x = x_pos;
-		y = y_pos;
+		x = xPos;
+		y = yPos;
 	}
 
-	// For å finne avstand mellom to punkter bruker vi vektormatematikk
+	public Punkt(String xPos, String yPos) throws IllegalArgumentException
+	{
+		int tempX = 0;
+		int tempY = 0;
+
+		try {
+			tempX = Integer.parseInt(xPos);
+			tempY = Integer.parseInt(yPos);
+		} catch (Exception e) {
+			System.err.println("[Punkt] Feil: " + e.getMessage());
+			throw new IllegalArgumentException("Ugyldig input");
+		}
+
+		x = tempX;
+		y = tempY;
+	}
+
+	// For Ã¥ finne avstand mellom to punkter bruker vi vektormatematikk
 	public double avstand(Punkt pt2)
 	{
-		// Bruker getters - mer oversiktlig. Int er ok- får ikke desimaer av å opphøye i 2 (før man tar roten av utrykket).
+		// Bruker getters - mer oversiktlig. Int er ok- fÃ¥r ikke desimaer av Ã¥ opphÃ¸ye i 2 (fÃ¸r man tar roten av utrykket).
 		int delta_x = pt2.getX() - getX();
 		int delta_y = pt2.getY() - getY();
 		return Math.sqrt(delta_x * delta_x + delta_y * delta_y);

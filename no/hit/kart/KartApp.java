@@ -7,6 +7,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Jo on 03.09.2015.
  * <p>
@@ -17,6 +23,7 @@ import javafx.stage.Stage;
 
 public class KartApp extends Application
 {
+	List<Hendelse> hendelseList;
 	public static void main(String[] args)
 	{
 		launch(args);
@@ -26,9 +33,9 @@ public class KartApp extends Application
 	@Override
 	public void start(Stage primaryStage) throws Exception
 	{
-		// Løst kopiert fra mal leksjon 1
+		// LÃ¸st kopiert fra mal leksjon 1
 		Group root = new Group();
-		Scene scene = new Scene(root, 800, 400); // Størrelsen på bildet - verden.jpg
+		Scene scene = new Scene(root, 800, 400); // StÃ¸rrelsen pÃ¥ bildet - verden.jpg
 
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("KartApp");
@@ -43,9 +50,33 @@ public class KartApp extends Application
 
 	}
 
+	private ArrayList<Hendelse> lastHendelserFraFil(String filbane)
+	{
+
+		ArrayList<Hendelse> hendelser = new ArrayList<Hendelse>();
+		BufferedReader innfil;
+		// Blokk for lasting av fil
+		try {
+			InputStream in = getClass().getResourceAsStream("data/hendelser.txt");
+			innfil = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+		} catch (Exception e) {
+			System.err.println("[lastHendelserFrafil] Feil under lasting av tekstfil");
+		}
+		// Blokk for lesing av data.
+		try {
+			String tempLinje = innfil.readLine();
+			// Hvis den leste linjen er tom avbryt lÃ¸kka. Dersom filen som blir lest inn allerede er tom
+			// UtfÃ¸res aldri instruksjonene i lÃ¸kka
+			while (tempLinje != null) {
+
+			}
+			innfil.close(); // Lukk leseren
+		}
+		return hendelser;
+	}
 	private ImageView lastImageViewFraFil(String filbane)
 	{
-		Image bilde; // Deklareres før skopet til try-catch blokken for å "eksistere" etter try-catchen
+		Image bilde; // Deklareres fÃ¸r skopet til try-catch blokken for Ã¥ "eksistere" etter try-catchen
 		try {
 			bilde = new Image(filbane);
 		} catch (Exception e) { // fanger alt!
