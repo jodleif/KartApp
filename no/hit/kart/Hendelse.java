@@ -11,6 +11,7 @@ public class Hendelse
 	private Punkt punkt;
 	private String hendelsesTekst;
 	private Dato dato;
+	private Boolean funnetISøk = false; // flagges dersom den er funnet i et søk. Brukes for å markere
 
 	// Konstruktør for klassen hendelse.
 	public Hendelse(Dato dato, Punkt punktPåKartet, String beskrivelse)
@@ -90,5 +91,15 @@ public class Hendelse
 	public void setDato(Dato dato)
 	{
 		this.dato = dato;
+	}
+
+	public Boolean getFunnetISøk()
+	{
+		return funnetISøk;
+	}
+
+	public void setFunnetISøk(Boolean funnetISøk)
+	{
+		this.funnetISøk = funnetISøk;
 	}
 }

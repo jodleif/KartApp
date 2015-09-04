@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
 import javax.xml.transform.sax.SAXSource;
@@ -28,8 +29,9 @@ import java.util.List;
 
 public class KartApp extends Application
 {
-	List<Hendelse> hendelseList;
-	List<Circle> sirkelListe;
+	ArrayList<Hendelse> hendelseList;
+	ArrayList<Circle> sirkelListe;
+
 	public static void main(String[] args)
 	{
 		launch(args);
@@ -73,7 +75,17 @@ public class KartApp extends Application
 		// Dummy søke aktivasjon - med knappen S / s
 		scene.setOnKeyPressed((KeyEvent e) -> {
 			if (e.getCode().equals(KeyCode.S)) {
-				System.out.println("Søke!");
+				Punkt søkePunkt = Søk.søkeDialog();
+				tegnKryssIPunkt(søkePunkt, root);
+				Hendelse h = Søk.søk(søkePunkt, hendelseList);
+
+				// Sjekker om søkepunktet er innenfor en rimlig avstand
+				if (søkePunkt.avstand(h.getPunkt()) <= 20.0d) {
+					h.setFunnetISøk(true);
+					opprettSirkler();
+					tegnSirkler(root);
+				}
+
 			}
 		});
 		opprettSirkler(); // Tegne sirkler OVER bildet.
@@ -96,8 +108,17 @@ public class KartApp extends Application
 		}
 	}
 
+	private void tegnKryssIPunkt(Punkt p, Group root)
+	{
+		Line l1 = new Line(p.getX() - 2, p.getY() - 2, p.getX() + 2, p.getY() + 2);
+		Line l2 = new Line(p.getX() + 2, p.getY() - 2, p.getX() - 2, p.getY() + 2);
+		root.getChildren().add(l1);
+		root.getChildren().add(l2);
+	}
+
 	/*
-	Send med en referanse til "root"
+	Opretter en liste med sirkler, som skal tegnes oppå kartet.
+	Dersom en hendelse er flagget som funnet, tegnes sirklen litt større og rød
 	 */
 	private void opprettSirkler()
 	{
@@ -107,7 +128,14 @@ public class KartApp extends Application
 			// lager midlertidige variabler for å få mer lettlest kode.
 			int x = h.getPunkt().getX();
 			int y = h.getPunkt().getY();
-			sirkelListe.add(new Circle(x, y, 5, Color.rgb(0, 0, 255)));
+
+			// Kode for å sjekke om hendelsen er "funnet" i et søk
+			if (!h.getFunnetISøk()) {
+				sirkelListe.add(new Circle(x, y, 5, Color.rgb(0, 0, 255)));
+			} else {
+				// Grønn for funnet!
+				sirkelListe.add(new Circle(x, y, 6, Color.GREEN));
+			}
 		}
 	}
 
@@ -119,13 +147,6 @@ public class KartApp extends Application
 			if (teller < hendelseList.size()) {
 				Tooltip.install(c, new Tooltip(hendelseList.get(teller++).getHendelsesTekst()));
 			}
-
-			// Sirkelen endrer farge når man "hovrer" over den
-			c.setOnMouseEntered((MouseEvent e) -> {
-				c.setFill(Color.RED);
-			});
-			// Skifter farge tilbake til originalfargen hvis man går ut.
-			c.setOnMouseExited(e -> c.setFill(Color.rgb(0, 0, 255)));
 			root.getChildren().add(c);
 		}
 	}
@@ -165,6 +186,7 @@ public class KartApp extends Application
 		}
 		return hendelser;
 	}
+
 	private ImageView lastImageViewFraFil(String filbane)
 	{
 		Image bilde; // Deklareres før skopet til try-catch blokken for å "eksistere" etter try-catchen
