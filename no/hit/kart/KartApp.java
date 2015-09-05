@@ -14,7 +14,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -39,6 +38,7 @@ import java.util.ArrayList;
  * - start metoden er kanskje litt for stor?! burde delt den inn i fler undermetoder.
  * - Ganske ekstensiv feilsjekking, men muligens noe ustrukturert. Har prøvd å dokumentere i de ulike feilmeldingene
  * til konsollen hvor eventuelle problemer har oppstått. (med navn på klasser, metoder)
+ * - Fjerner alle sirklene for dersom en har blitt endret, og tegner alle på nytt. Unødvendig?!
  */
 
 public class KartApp extends Application
@@ -108,12 +108,15 @@ public class KartApp extends Application
 
 			}
 		});
+
 		opprettSirkler(); // Tegne sirkler OVER bildet.
-		tegnSirkler(root);
-		primaryStage.show();
+		tegnSirkler(root);// derfor er dette metodekallet etter bildet blir lagt til.
+
+		primaryStage.show(); // Vis det genererte GUI-et
 
 	}
 
+	// Fjerne sirklene - brukes dersom noen har endret farge. (de må lages på nytt)
 	private void fjernSirkler(Group root)
 	{
 		for (Circle c : sirkelListe) {
@@ -242,7 +245,7 @@ public class KartApp extends Application
 	private void skrivTekstIRektangel(String tekst, Group root)
 	{
 		root.getChildren().remove(text); // fjern tekst, uansett. (trengs hvis det er skrevet noe fra før)
-		text = new Text(660, 365, tekst);
+		text = new Text(660, 379, tekst);
 		root.getChildren().add(text);
 	}
 }
