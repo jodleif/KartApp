@@ -64,7 +64,9 @@ public class KartApp extends Application
 		text = new Text();
 
 		//hendelseList = new ArrayList<Hendelse>();
-		printHendelser();
+
+		//printHendelser(); teste at metodene ble lastet riktig inn. Skrives i konsollet.
+
 		Group root = new Group();
 		Scene scene = new Scene(root, 800, 400); // Størrelsen på bildet - verden.jpg
 
@@ -89,15 +91,15 @@ public class KartApp extends Application
 				tegnSirkler(root);
 			});
 		}
-		// Dummy søke aktivasjon - med knappen S / s
+		// Søke aktivasjon - med knappen S / s
 		scene.setOnKeyPressed((KeyEvent e) -> {
 			if (e.getCode().equals(KeyCode.S)) {
-				Punkt søkePunkt = Søk.søkeDialog();
-				tegnKryssIPunkt(søkePunkt, root);
-				Hendelse h = Søk.søk(søkePunkt, hendelseList);
+				Punkt søkePunkt = Søk.søkeDialog(); // Åpner en dialog som spør brukeren om informasjon til å lage et søkepunkt
+				tegnKryssIPunkt(søkePunkt, root); // Tegner et svart kryss i punktet brukeren søkte.
+				Hendelse h = Søk.søk(søkePunkt, hendelseList); // Søker etter nærmeste hendelse til punktet brukeren spesifiserte
 
 				// Sjekker om søkepunktet er innenfor en rimlig avstand
-				if (søkePunkt.avstand(h.getPunkt()) <= 20.0d) {
+				if (søkePunkt.avstand(h.getPunkt()) <= 20.0d) { // Dersom punktet er innenfor en avstand på 20 piksler flagger man hendelsen slik at den tegnes grønn
 					h.setFunnetISøk(true);
 					opprettSirkler();
 					tegnSirkler(root);
@@ -119,6 +121,7 @@ public class KartApp extends Application
 		}
 	}
 
+	// Metode for testing at hendelsene ble lastet riktig inn.
 	private void printHendelser()
 	{
 		for (Hendelse h : hendelseList) {
@@ -126,6 +129,7 @@ public class KartApp extends Application
 		}
 	}
 
+	// Metode for å tegne et kryss i et punkt.
 	private void tegnKryssIPunkt(Punkt p, Group root)
 	{
 		Line l1 = new Line(p.getX() - 2, p.getY() - 2, p.getX() + 2, p.getY() + 2);
