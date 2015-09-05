@@ -1,10 +1,8 @@
 package no.hit.kart;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,28 +10,46 @@ import javafx.scene.input.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import javax.xml.transform.sax.SAXSource;
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Created by Jo on 03.09.2015.
+ * Created by Jo Øivind Gjernes on 03.09.2015.
  * <p>
- * Innlevering 1 - Leksjon 3
+ * Innlevering 1
  * <p>
- * Skrevet i IntelliJ IDEA
+ * Skrevet i IntelliJ IDEA - importert i netbeans og testet(ikke enda)
+ *
+ * Skal ha laget løsninger på alt som ble spurt om i oppgaven.
+ * Har gjort noen små tilleg:
+ * - Hvis man "hovrer" med musepekeren over et punkt vises det et
+ * tooltip som angir hendelsesteksten til de ulike hendelsene.
+ * - Søking utførses ved at man trykker knappen "s" på tastaturet.
+ * - Har valgt å bruke "lambda-funksjoner" for de ulike "eventhandlerene" i koden. Dette tok jeg fra eksempler i
+ * læreboken
+ *
+ * Problemer med løsningen:
+ * - Lite elegant å sende med "root" til alle metodene som tegner objekter. Burde laget en privat variabel som holder på
+ * "root" slik at jeg ikke trenger å sende den som parameter for de ulike funskjoenene i denne klassen.
+ * - start metoden er kanskje litt for stor?! burde delt den inn i fler undermetoder.
+ * - Ganske ekstensiv feilsjekking, men muligens noe ustrukturert. Har prøvd å dokumentere i de ulike feilmeldingene
+ * til konsollen hvor eventuelle problemer har oppstått. (med navn på klasser, metoder)
  */
 
 public class KartApp extends Application
 {
 	ArrayList<Hendelse> hendelseList;
 	ArrayList<Circle> sirkelListe;
+	Text text; // tekst å vise på skjerm
 
 	public static void main(String[] args)
 	{
+
 		launch(args);
 		System.exit(0);
 	}
@@ -42,7 +58,11 @@ public class KartApp extends Application
 	public void start(Stage primaryStage) throws Exception
 	{
 		// Løst kopiert fra mal leksjon 1
+		// denne metoden så en annen mappestruktur enn hva jeg trengte for å laste bildet (merkelig)
 		hendelseList = lastHendelserFraFil("KartApp/data/hendelser.txt");
+
+		text = new Text();
+
 		//hendelseList = new ArrayList<Hendelse>();
 		printHendelser();
 		Group root = new Group();
@@ -57,6 +77,8 @@ public class KartApp extends Application
 			root.getChildren().add(iv);
 		primaryStage.setResizable(false);
 
+		tegnRektangelForTekst(root);
+
 		if (iv != null) {
 			iv.setOnMouseClicked((MouseEvent e) -> {
 				int x = (int) e.getX();
@@ -64,11 +86,6 @@ public class KartApp extends Application
 
 				sirkelListe.add(new Circle(x, y, 15, Color.GREEN));
 				fjernSirkler(root);
-				tegnSirkler(root);
-			});
-			iv.setOnScroll((ScrollEvent e) -> {
-				fjernSirkler(root);
-				opprettSirkler();
 				tegnSirkler(root);
 			});
 		}
@@ -84,6 +101,7 @@ public class KartApp extends Application
 					h.setFunnetISøk(true);
 					opprettSirkler();
 					tegnSirkler(root);
+					skrivTekstIRektangel(h.getHendelsesTekst(), root);
 				}
 
 			}
@@ -203,5 +221,24 @@ public class KartApp extends Application
 		bildenode.setImage(bilde);
 
 		return bildenode;
+	}
+
+	private void tegnRektangelForTekst(Group root)
+	{
+		Rectangle rect = new Rectangle(650, 360, 125, 30);
+
+		// Litt avrundede kanter
+		rect.setArcHeight(5);
+		rect.setArcWidth(5);
+		rect.setFill(Color.rgb(0, 0, 0, 0.2));
+		root.getChildren().add(new Text(655, 355, "Søkeresultat"));
+		root.getChildren().add(rect);
+	}
+
+	private void skrivTekstIRektangel(String tekst, Group root)
+	{
+		root.getChildren().remove(text); // fjern tekst, uansett. (trengs hvis det er skrevet noe fra før)
+		text = new Text(660, 365, tekst);
+		root.getChildren().add(text);
 	}
 }
