@@ -81,6 +81,7 @@ public class KartApp extends Application
 
 		tegnRektangelForTekst(root);
 
+		/*
 		if (iv != null) {
 			iv.setOnMouseClicked((MouseEvent e) -> {
 				int x = (int) e.getX();
@@ -90,7 +91,7 @@ public class KartApp extends Application
 				fjernSirkler(root);
 				tegnSirkler(root);
 			});
-		}
+		}*/
 		// Søke aktivasjon - med knappen S / s
 		scene.setOnKeyPressed((KeyEvent e) -> {
 			if (e.getCode().equals(KeyCode.S)) {
